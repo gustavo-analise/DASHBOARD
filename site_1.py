@@ -247,7 +247,6 @@ def exibir_tabela_arvores_parques():
         ])
         st.dataframe(df)
 
-
 def gerar_grafico():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
@@ -294,13 +293,85 @@ def gerar_grafico():
 
     st.pyplot(fig)
 
+# Função para exibir os relatórios filtrados
+def exibir_relatorios_filtros():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    # Obter os parques disponíveis (Agora vamos usar o id diretamente)
+    cursor.execute("SELECT id, nome_parque FROM parques WHERE id IN (1, 2)")  # Só pega Ibirapuera e Villa Lobos
+    parques = cursor.fetchall()
+    parque_opcoes = {parque[1]: parque[0] for parque in parques}
+    parque_selecionado = st.selectbox("Selecione o parque", ["Todos"] + list(parque_opcoes.keys()))
+
+    # Obter as árvores disponíveis
+    cursor.execute("SELECT DISTINCT nome FROM arvores")
+    arvores = [arvore[0] for arvore in cursor.fetchall()]
+    arvore_selecionada = st.selectbox("Selecione a árvore", ["Todas"] + arvores)
+
+    # Condições disponíveis
+    condicoes = {"Todos": None, "Péssimo (P)": "P", "Bom (B)": "B", "Ruim (R)": "R"}
+    condicao_selecionada = st.selectbox("Selecione a condição", list(condicoes.keys()))
+
+    # Construir consulta dinâmica com base nos filtros
+    query = """
+        SELECT 
+            parques.nome_parque, 
+            arvores.nome AS Nome_Arvore, 
+            arvores.especie AS Especie, 
+            arvores.altura AS Altura, 
+            arvores.poda_status AS Poda_Status, 
+            arvores.condicao_arvore AS Condicao_Arvore
+        FROM 
+            parque_arvores
+        JOIN 
+            arvores ON parque_arvores.arvore_id = arvores.IDARVORE
+        JOIN 
+            parques ON parque_arvores.parque_id = parques.id
+    """
+    conditions = []
+    params = []
+
+    # Filtros
+    if parque_selecionado != "Todos":
+        st.write(f"Filtrando por parque: {parque_selecionado}")  # Depuração
+        conditions.append("parques.id = ?")
+        params.append(parque_opcoes[parque_selecionado])
+
+    if arvore_selecionada != "Todas":
+        conditions.append("arvores.nome = ?")
+        params.append(arvore_selecionada)
+
+    if condicoes[condicao_selecionada]:
+        conditions.append("arvores.condicao_arvore = ?")
+        params.append(condicoes[condicao_selecionada])
+
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+
+    query += " ORDER BY parques.nome_parque, arvores.nome"
+
+    # Executar consulta
+    cursor.execute(query, params)
+    dados = cursor.fetchall()
+    conn.close()
+
+    # Exibir tabela com os resultados
+    if dados:
+        df = pd.DataFrame(dados, columns=[
+            "Parque", "Nome da Árvore", "Espécie", "Altura", "Status de Poda", "Condição da Árvore"
+        ])
+        st.dataframe(df)
+    else:
+        st.write("Nenhum resultado encontrado para os filtros aplicados.")
+
 
 
 # Função principal do Streamlit
 def main():
     st.title("Sistema de Gestão de Árvores e Parques")
 
-    menu = ["Login", "Registrar", "Dashboard", "Tabelas"]
+    menu = ["Login", "Registrar", "Dashboard", "Tabelas","Relatórios"]
     choice = st.sidebar.selectbox("Menu", menu)
 
     if choice == "Login":
@@ -344,6 +415,15 @@ def main():
             exibir_tabela_arvores_parques()
         else:
             st.warning("Por favor, faça login para acessar as Tabelas.")
+  
+  
+    elif choice == "Relatórios":
+        if "logged_in" in st.session_state and st.session_state["logged_in"]:
+            st.subheader("Relatórios")
+            exibir_relatorios_filtros()
+        else:
+            st.warning("Por favor, faça login para acessar os Relatórios.")
+
 
 if __name__ == "__main__":
     setup_database()
