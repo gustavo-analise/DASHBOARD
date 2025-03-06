@@ -72,9 +72,6 @@ gestao_arvores_parques/
 
 Contribuições são bem-vindas! Se você tiver sugestões de melhorias ou correções de bugs, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
-## Autor
-
-* [Seu Nome]
 
 ## Licença
 
