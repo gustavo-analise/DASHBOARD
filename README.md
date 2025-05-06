@@ -18,14 +18,27 @@ O projeto é dividido em três partes principais:
         * Visualizar dados sobre árvores e parques em tabelas.
         * Gerar gráficos mostrando a distribuição das condições das árvores por parque.
         * Gerar relatórios filtrados com base em critérios como parque, árvore e condição.
+          
+## Aqui está uma visão do Dashboard principal com a distribuição das condições:
 
+![Screenshot do Dashboard Principal com Gráficos](https://github.com/user-attachments/assets/5348eaa6-6af9-4a6b-b1c7-3a7aaacc8a3d)
+
+* **Autenticação de Usuários:** Login e registro de usuários para acesso seguro ao sistema.
+![Screenshot da Tela de Login](https://github.com/user-attachments/assets/7d0115dc-ee82-49e1-874a-51efca46927a)
+  
 ## Funcionalidades
 
 * **Autenticação de Usuários:** Login e registro de usuários para acesso seguro ao sistema.
 * **Gestão de Árvores e Parques:** Inserção, visualização e edição de dados sobre árvores e parques.
 * **Visualização de Dados:** Exibição de dados em tabelas interativas.
 * **Geração de Gráficos:** Visualização da distribuição das condições das árvores por parque.
+
 * **Relatórios Filtrados:** Geração de relatórios com base em filtros selecionáveis.
+![Screenshot da Funcionalidade de Relatórios Filtrados](https://github.com/user-attachments/assets/e173d36c-e6bf-49f8-bb69-95018cc259e6)
+
+## Visualização de Dados
+* **Visualização de Dados:** Exibição de dados em tabelas interativas.
+![Screenshot da Visualização de Dados em Tabelas](https://github.com/user-attachments/assets/496ec204-a946-43c9-a64a-dd2564f0464b)
 
 ## Tecnologias Utilizadas
 
